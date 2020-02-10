@@ -59,6 +59,7 @@ export default class Endpoint extends EventEmitter {
         DeviceEventEmitter.addListener('pjSipCallScreenLocked', this._onCallScreenLocked.bind(this));
         DeviceEventEmitter.addListener('pjSipMessageReceived', this._onMessageReceived.bind(this));
         DeviceEventEmitter.addListener('pjSipConnectivityChanged', this._onConnectivityChanged.bind(this));
+        DeviceEventEmitter.addListener('pjSipConnectStateChanged', this._onConnectStateChanged.bind(this));
     }
 
     /**
@@ -559,18 +560,18 @@ export default class Endpoint extends EventEmitter {
     }
 
     /**
-     * @fires Endpoint#connectivity_changed
+     * @fires Endpoint#connect_state_changed
      * @private
      * @param data {Object}
      */
-    _onConnectivityChanged(data) {
+    _onConnectStateChanged(data) {
         /**
          * Fires when registration status has changed.
          *
-         * @event Endpoint#connectivity_changed
+         * @event Endpoint#connect_state_changed
          * @property {Account} account
          */
-        this.emit("connectivity_changed", new Account(data));
+        this.emit("connect_state_changed", data);
     }
 
     /**

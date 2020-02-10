@@ -8,3 +8,4 @@ ios/VialerPJSIP.framework/
 .libs.lock
 .libs.tar.gz
 .project
+.settings

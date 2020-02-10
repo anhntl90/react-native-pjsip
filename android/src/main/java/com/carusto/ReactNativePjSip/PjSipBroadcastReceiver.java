@@ -20,16 +20,17 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
 
     private int seq = 0;
 
-    private ReactApplicationContext context;
-
+    public static ReactApplicationContext cnContext;
     private HashMap<Integer, Callback> callbacks = new HashMap<>();
 
     public PjSipBroadcastReceiver(ReactApplicationContext context) {
-        this.context = context;
+
+        cnContext = context;
     }
 
     public void setContext(ReactApplicationContext context) {
-        this.context = context;
+
+        cnContext = context;
     }
 
     public int register(Callback callback) {
@@ -57,33 +58,34 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
 
-        Log.d(TAG, "Received \""+ action +"\" response from service (" + ArgumentUtils.dumpIntentExtraParameters(intent) + ")");
+        Log.d(TAG, "Received \"" + action + "\" response from service ("
+                + ArgumentUtils.dumpIntentExtraParameters(intent) + ")");
 
         switch (action) {
-            case PjActions.EVENT_STARTED:
-                onCallback(intent);
-                break;
-            case PjActions.EVENT_ACCOUNT_CREATED:
-                onCallback(intent);
-                break;
-            case PjActions.EVENT_REGISTRATION_CHANGED:
-                onRegistrationChanged(intent);
-                break;
-            case PjActions.EVENT_MESSAGE_RECEIVED:
-                onMessageReceived(intent);
-                break;
-            case PjActions.EVENT_CALL_RECEIVED:
-                onCallReceived(intent);
-                break;
-            case PjActions.EVENT_CALL_CHANGED:
-                onCallChanged(intent);
-                break;
-            case PjActions.EVENT_CALL_TERMINATED:
-                onCallTerminated(intent);
-                break;
-            default:
-                onCallback(intent);
-                break;
+        case PjActions.EVENT_STARTED:
+            onCallback(intent);
+            break;
+        case PjActions.EVENT_ACCOUNT_CREATED:
+            onCallback(intent);
+            break;
+        case PjActions.EVENT_REGISTRATION_CHANGED:
+            onRegistrationChanged(intent);
+            break;
+        case PjActions.EVENT_MESSAGE_RECEIVED:
+            onMessageReceived(intent);
+            break;
+        case PjActions.EVENT_CALL_RECEIVED:
+            onCallReceived(intent);
+            break;
+        case PjActions.EVENT_CALL_CHANGED:
+            onCallChanged(intent);
+            break;
+        case PjActions.EVENT_CALL_TERMINATED:
+            onCallTerminated(intent);
+            break;
+        default:
+            onCallback(intent);
+            break;
         }
     }
 
@@ -127,7 +129,7 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
             if (callbacks.containsKey(id)) {
                 callback = callbacks.remove(id);
             } else {
-                Log.w(TAG, "Callback with \""+ id +"\" identifier not found (\""+ intent.getAction() +"\")");
+                Log.w(TAG, "Callback with \"" + id + "\" identifier not found (\"" + intent.getAction() + "\")");
             }
         }
 
@@ -147,9 +149,9 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void emit(String eventName, @Nullable Object data) {
+    public static void emit(String eventName, @Nullable Object data) {
         Log.d(TAG, "emit " + eventName + " / " + data);
 
-        context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, data);
+        cnContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, data);
     }
 }
