@@ -151,7 +151,7 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
 
     public static void emit(String eventName, @Nullable Object data) {
         Log.d(TAG, "emit " + eventName + " / " + data);
-
-        cnContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, data);
+        if (cnContext != null)
+            cnContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, data);
     }
 }
