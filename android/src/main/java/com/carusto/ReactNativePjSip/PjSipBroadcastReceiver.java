@@ -58,7 +58,7 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
 
-        Log.d(TAG, "Received \"" + action + "\" response from service ("
+        Log.d("ReactNative", "Received \"" + action + "\" response from service ("
                 + ArgumentUtils.dumpIntentExtraParameters(intent) + ")");
 
         switch (action) {
@@ -75,6 +75,14 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
             onMessageReceived(intent);
             break;
         case PjActions.EVENT_CALL_RECEIVED:
+            String ns = context.getApplicationContext().getPackageName();
+            String cls = ns + ".MainActivity";
+            Intent _intent = new Intent();
+            _intent.setClassName(ns, cls);
+            _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.EXTRA_DOCK_STATE_CAR);
+            _intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            _intent.putExtra("foreground", true);
+            context.startActivity(_intent);
             onCallReceived(intent);
             break;
         case PjActions.EVENT_CALL_CHANGED:
@@ -98,7 +106,6 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
     private void onMessageReceived(Intent intent) {
         String json = intent.getStringExtra("data");
         Object params = ArgumentUtils.fromJson(json);
-
         emit("pjSipMessageReceived", params);
     }
 
@@ -150,7 +157,7 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
     }
 
     public static void emit(String eventName, @Nullable Object data) {
-        Log.d(TAG, "emit " + eventName + " / " + data);
+        Log.d("ReactNative", "emit " + eventName + " / " + data);
         if (cnContext != null)
             cnContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, data);
     }
