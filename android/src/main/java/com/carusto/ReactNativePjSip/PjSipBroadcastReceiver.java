@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.util.Log;
 import com.carusto.ReactNativePjSip.utils.ArgumentUtils;
 import com.facebook.react.bridge.Callback;
@@ -11,6 +13,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -58,8 +61,8 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
 
-        Log.d("ReactNative", "Received \"" + action + "\" response from service ("
-                + ArgumentUtils.dumpIntentExtraParameters(intent) + ")");
+        // Log.d("ReactNative", "Received \"" + action + "\" response from service ("
+        // + ArgumentUtils.dumpIntentExtraParameters(intent) + ")");
 
         switch (action) {
         case PjActions.EVENT_STARTED:
@@ -75,14 +78,32 @@ public class PjSipBroadcastReceiver extends BroadcastReceiver {
             onMessageReceived(intent);
             break;
         case PjActions.EVENT_CALL_RECEIVED:
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            List<RunningTaskInfo> services = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
             String ns = context.getApplicationContext().getPackageName();
-            String cls = ns + ".MainActivity";
-            Intent _intent = new Intent();
-            _intent.setClassName(ns, cls);
-            _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.EXTRA_DOCK_STATE_CAR);
-            _intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            _intent.putExtra("foreground", true);
-            context.startActivity(_intent);
+            boolean isServiceFound = false;
+            // for (RunningTaskInfo task : tasks) {
+            // Log.d("ReactNative", "Running: " + task.baseActivity.getPackageName() + ns);
+            // if (ns.equalsIgnoreCase(task.baseActivity.getPackageName())) {
+            // isServiceFound = true;
+            // break;
+            // }
+            // }
+            if (services.size() > 0 && services.get(0).topActivity.getPackageName().toString()
+                    .equalsIgnoreCase(context.getApplicationContext().getPackageName().toString())) {
+                isServiceFound = true;
+            }
+            Log.d("ReactNative", "Running: " + services.get(0).topActivity.getPackageName().toString());
+            if (isServiceFound == false) {
+                String cls = ns + ".MainActivity";
+                Intent _intent = new Intent();
+                _intent.setClassName(ns, cls);
+                _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.EXTRA_DOCK_STATE_CAR);
+                _intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                _intent.putExtra("foreground", true);
+                context.startActivity(_intent);
+            }
             onCallReceived(intent);
             break;
         case PjActions.EVENT_CALL_CHANGED:
