@@ -300,18 +300,20 @@ public class PjSipService extends Service {
         }
 
         // Remove link to account
-        mAccounts.remove(account);
 
         // Remove transport
         try {
-            mEndpoint.transportClose(account.getTransportId());
-        } catch (Exception e) {
-            Log.w(TAG, "Failed to close transport for account", e);
-        }
+            Log.w("ReactNative", "evict ! ");
+            // mEndpoint.transportClose(account.getTransportId());
+            // TODO: hide this make pjSipCallTerminated
 
+            // account.register(false);
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to unregister account", e);
+        }
+        mAccounts.remove(account);
         // Remove account in PjSip
         account.delete();
-
     }
 
     public void evict(final PjSipCall call) {
@@ -338,76 +340,76 @@ public class PjSipService extends Service {
                 + ")");
 
         switch (intent.getAction()) {
-        // General actions
-        case PjActions.ACTION_START:
-            handleStart(intent);
-            break;
+            // General actions
+            case PjActions.ACTION_START:
+                handleStart(intent);
+                break;
 
-        // Account actions
-        case PjActions.ACTION_CREATE_ACCOUNT:
-            handleAccountCreate(intent);
-            break;
-        case PjActions.ACTION_REGISTER_ACCOUNT:
-            handleAccountRegister(intent);
-            break;
-        case PjActions.ACTION_DELETE_ACCOUNT:
-            handleAccountDelete(intent);
-            break;
+            // Account actions
+            case PjActions.ACTION_CREATE_ACCOUNT:
+                handleAccountCreate(intent);
+                break;
+            case PjActions.ACTION_REGISTER_ACCOUNT:
+                handleAccountRegister(intent);
+                break;
+            case PjActions.ACTION_DELETE_ACCOUNT:
+                handleAccountDelete(intent);
+                break;
 
-        case PjActions.ACTION_SEND_MESSAGE:
-            handleSendMessage(intent);
-            break;
+            case PjActions.ACTION_SEND_MESSAGE:
+                handleSendMessage(intent);
+                break;
 
-        // Call actions
-        case PjActions.ACTION_MAKE_CALL:
-            handleCallMake(intent);
-            break;
-        case PjActions.ACTION_HANGUP_CALL:
-            handleCallHangup(intent);
-            break;
-        case PjActions.ACTION_DECLINE_CALL:
-            handleCallDecline(intent);
-            break;
-        case PjActions.ACTION_ANSWER_CALL:
-            handleCallAnswer(intent);
-            break;
-        case PjActions.ACTION_HOLD_CALL:
-            handleCallSetOnHold(intent);
-            break;
-        case PjActions.ACTION_UNHOLD_CALL:
-            handleCallReleaseFromHold(intent);
-            break;
-        case PjActions.ACTION_MUTE_CALL:
-            handleCallMute(intent);
-            break;
-        case PjActions.ACTION_UNMUTE_CALL:
-            handleCallUnMute(intent);
-            break;
-        case PjActions.ACTION_USE_SPEAKER_CALL:
-            handleCallUseSpeaker(intent);
-            break;
-        case PjActions.ACTION_USE_EARPIECE_CALL:
-            handleCallUseEarpiece(intent);
-            break;
-        case PjActions.ACTION_XFER_CALL:
-            handleCallXFer(intent);
-            break;
-        case PjActions.ACTION_XFER_REPLACES_CALL:
-            handleCallXFerReplaces(intent);
-            break;
-        case PjActions.ACTION_REDIRECT_CALL:
-            handleCallRedirect(intent);
-            break;
-        case PjActions.ACTION_DTMF_CALL:
-            handleCallDtmf(intent);
-        case PjActions.ACTION_CHANGE_CODEC_SETTINGS:
-            handleChangeCodecSettings(intent);
-            break;
+            // Call actions
+            case PjActions.ACTION_MAKE_CALL:
+                handleCallMake(intent);
+                break;
+            case PjActions.ACTION_HANGUP_CALL:
+                handleCallHangup(intent);
+                break;
+            case PjActions.ACTION_DECLINE_CALL:
+                handleCallDecline(intent);
+                break;
+            case PjActions.ACTION_ANSWER_CALL:
+                handleCallAnswer(intent);
+                break;
+            case PjActions.ACTION_HOLD_CALL:
+                handleCallSetOnHold(intent);
+                break;
+            case PjActions.ACTION_UNHOLD_CALL:
+                handleCallReleaseFromHold(intent);
+                break;
+            case PjActions.ACTION_MUTE_CALL:
+                handleCallMute(intent);
+                break;
+            case PjActions.ACTION_UNMUTE_CALL:
+                handleCallUnMute(intent);
+                break;
+            case PjActions.ACTION_USE_SPEAKER_CALL:
+                handleCallUseSpeaker(intent);
+                break;
+            case PjActions.ACTION_USE_EARPIECE_CALL:
+                handleCallUseEarpiece(intent);
+                break;
+            case PjActions.ACTION_XFER_CALL:
+                handleCallXFer(intent);
+                break;
+            case PjActions.ACTION_XFER_REPLACES_CALL:
+                handleCallXFerReplaces(intent);
+                break;
+            case PjActions.ACTION_REDIRECT_CALL:
+                handleCallRedirect(intent);
+                break;
+            case PjActions.ACTION_DTMF_CALL:
+                handleCallDtmf(intent);
+            case PjActions.ACTION_CHANGE_CODEC_SETTINGS:
+                handleChangeCodecSettings(intent);
+                break;
 
-        // Configuration actions
-        case PjActions.ACTION_SET_SERVICE_CONFIGURATION:
-            handleSetServiceConfiguration(intent);
-            break;
+            // Configuration actions
+            case PjActions.ACTION_SET_SERVICE_CONFIGURATION:
+                handleSetServiceConfiguration(intent);
+                break;
         }
     }
 
@@ -543,16 +545,16 @@ public class PjSipService extends Service {
 
         if (configuration.isTransportNotEmpty()) {
             switch (configuration.getTransport()) {
-            case "UDP":
-                transportId = mUdpTransportId;
-                break;
-            case "TLS":
-                transportId = mTlsTransportId;
-                break;
-            default:
-                Log.w(TAG, "Illegal \"" + configuration.getTransport()
-                        + "\" transport (possible values are UDP, TCP or TLS) use TCP instead");
-                break;
+                case "UDP":
+                    transportId = mUdpTransportId;
+                    break;
+                case "TLS":
+                    transportId = mTlsTransportId;
+                    break;
+                default:
+                    Log.w(TAG, "Illegal \"" + configuration.getTransport()
+                            + "\" transport (possible values are UDP, TCP or TLS) use TCP instead");
+                    break;
             }
         }
 
