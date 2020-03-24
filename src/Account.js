@@ -42,6 +42,10 @@ export default class Account {
         return this._data.username;
     }
 
+    getUserAuth() {
+        return this._data.userauth;
+    }
+
     /**
      * Domain specified in Endpoint.createAccount().
      * @returns {int|null}

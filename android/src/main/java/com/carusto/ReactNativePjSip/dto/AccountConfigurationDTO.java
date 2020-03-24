@@ -11,6 +11,8 @@ public class AccountConfigurationDTO {
 
     public String username;
 
+    public String userauth;
+
     public String domain;
 
     public String password;
@@ -40,6 +42,10 @@ public class AccountConfigurationDTO {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getUserAuth() {
+        return userauth;
     }
 
     public String getDomain() {
@@ -92,15 +98,15 @@ public class AccountConfigurationDTO {
     }
 
     public String getRegUri() {
-        return "sip:"+ domain;
+        return "sip:" + domain;
     }
 
     public String getIdUri() {
         if (name != null) {
-            return name + " <sip:"+ username +"@"+ domain +">";
+            return name + " <sip:" + username + "@" + domain + ">";
         }
 
-        return "<sip:"+ username +"@"+ domain +">";
+        return "<sip:" + username + "@" + domain + ">";
     }
 
     public boolean isTransportNotEmpty() {
@@ -119,6 +125,7 @@ public class AccountConfigurationDTO {
         AccountConfigurationDTO c = new AccountConfigurationDTO();
         c.name = intent.getStringExtra("name");
         c.username = intent.getStringExtra("username");
+        c.userauth = intent.getStringExtra("userauth");
         c.domain = intent.getStringExtra("domain");
         c.password = intent.getStringExtra("password");
         c.proxy = intent.getStringExtra("proxy");

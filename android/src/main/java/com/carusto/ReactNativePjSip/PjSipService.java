@@ -503,11 +503,11 @@ public class PjSipService extends Service {
 
         // General settings
         AuthCredInfo cred = new AuthCredInfo("Digest", configuration.getNomalizedRegServer(),
-                configuration.getUsername(), 0, configuration.getPassword());
+                configuration.getUserAuth(), 0, configuration.getPassword());
 
         String idUri = configuration.getIdUri();
         String regUri = configuration.getRegUri();
-
+        Log.d("ReactNative", "idUri: " + idUri + " getUserAuth: " + configuration.getUserAuth());
         cfg.setIdUri(idUri);
         cfg.getRegConfig().setRegistrarUri(regUri);
         cfg.getRegConfig().setRegisterOnAdd(configuration.isRegOnAdd());
